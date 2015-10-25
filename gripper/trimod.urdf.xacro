@@ -1,0 +1,66 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find mygripper)/gripper/utils.urdf.xacro"/>
+  <xacro:include filename="$(find mygripper)/gripper/finger.urdf.xacro"/>
+
+  <xacro:property name="gripper_r" value="${0.02}"/>
+  <xacro:property name="gripper_d" value="${gripper_r*1.4641}"/>
+  <xacro:property name="gripper_rds" value="${gripper_r + gripper_d*0.5}"/>
+  <xacro:property name="gripper_a" value="${0.5774*(gripper_d*0.5+gripper_r)}"/>
+  <xacro:property name="gripper_b" value="${(gripper_d*0.5+gripper_r)/0.8660}"/>
+
+
+  <macro name="trimod" params="name parent *origin">
+
+    <link name="${name}_base">
+      <visual>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <cylinder length="0.01" radius="0.04"/>
+        </geometry>
+        <material name="blue">
+          <color rgba="0 0 .8 1"/>
+        </material>
+      </visual>
+      <collision>
+        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <geometry>
+          <cylinder length="0.01" radius="0.04"/>
+        </geometry>
+      </collision>
+      <inertial>
+        <origin rpy="${M_PI/2} 0 0" xyz="0 0 0"/>
+        <mass value="1000000"/>
+        <cylinder_inertia length="0.01" mass="1000000" radius="0.04"/>
+      </inertial>
+    </link>
+
+    <joint name="${name}_joint_base" type="fixed">
+      <parent link="${parent}"/>
+      <child link="${name}_base"/>
+      <insert_block name="origin"/>
+    </joint>
+
+
+    <finger name="${name}_finger_left" parent="${name}_base">
+      <origin rpy="0 0 ${M_PI}" xyz="${-gripper_a} ${gripper_rds} 0.0"/>
+    </finger>
+
+    <finger name="${name}_finger_right" parent="${name}_base">
+      <origin rpy="0 0 ${M_PI}" xyz="${-gripper_a} ${-gripper_rds} 0.0"/>
+    </finger>
+
+    <finger name="${name}_finger_center" parent="${name}_base">
+      <origin rpy="0 0 0" xyz="${gripper_b} 0 0.0"/>
+    </finger>
+
+  </macro>
+
+  <gazebo>
+    <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
+      <robotNamespace>/trimod</robotNamespace>
+    </plugin>
+  </gazebo>
+
+</robot>
