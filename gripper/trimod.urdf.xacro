@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:include filename="$(find mygripper)/gripper/utils.urdf.xacro"/>
-  <xacro:include filename="$(find mygripper)/gripper/finger.urdf.xacro"/>
+  <xacro:include filename="$(find trimod_gripper)/gripper/utils.urdf.xacro"/>
+  <xacro:include filename="$(find trimod_gripper)/gripper/finger.urdf.xacro"/>
 
   <xacro:property name="gripper_r" value="${0.02}"/>
   <xacro:property name="gripper_d" value="${gripper_r*1.4641}"/>
@@ -10,7 +10,7 @@
   <xacro:property name="gripper_a" value="${0.5774*(gripper_d*0.5+gripper_r)}"/>
   <xacro:property name="gripper_b" value="${(gripper_d*0.5+gripper_r)/0.8660}"/>
 
-
+  
   <macro name="trimod" params="name parent *origin">
 
     <link name="${name}_base">

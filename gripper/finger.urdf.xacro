@@ -40,15 +40,16 @@
       <visual>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-          <mesh filename="package://mygripper/meshes/Link0.stl" scale="${scale} ${scale} ${scale}"/>
+          <mesh filename="package://trimod_gripper/meshes/Link0.stl" scale="${scale} ${scale} ${scale}"/>
         </geometry>
       </visual>
 
       <collision>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-          <mesh filename="package://mygripper/meshes/Link0_convex.stl" scale="${scale} ${scale} ${scale}"/>
+          <mesh filename="package://trimod_gripper/meshes/Link0_convex.stl" scale="${scale} ${scale} ${scale}"/>
         </geometry>
+        <contact_coefficients mu="10.0" kp="100000.0" kd="100000.0" />
       </collision>
 
       <inertial>
@@ -62,7 +63,7 @@
       <visual>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-          <mesh filename="package://mygripper/meshes/Link1.stl" scale="${scale} ${scale} ${scale}"/>
+          <mesh filename="package://trimod_gripper/meshes/Link1.stl" scale="${scale} ${scale} ${scale}"/>
         </geometry>
         <material name="blue">
           <color rgba="0 0 .8 1"/>
@@ -73,8 +74,9 @@
       <collision>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-          <mesh filename="package://mygripper/meshes/Link1_convex.stl" scale="${scale} ${scale} ${scale}"/>
+          <mesh filename="package://trimod_gripper/meshes/Link1_convex.stl" scale="${scale} ${scale} ${scale}"/>
         </geometry>
+        <contact_coefficients mu="10.0" kp="100000.0" kd="100000.0" />
       </collision>
 
       <inertial>
@@ -88,7 +90,7 @@
       <visual>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-          <mesh filename="package://mygripper/meshes/Link2.stl" scale="${scale} ${scale} ${scale}"/>
+          <mesh filename="package://trimod_gripper/meshes/Link2.stl" scale="${scale} ${scale} ${scale}"/>
         </geometry>
         <material name="blue">
           <color rgba="0 0 .8 1"/>
@@ -99,8 +101,9 @@
       <collision>
         <origin rpy="0 0 0" xyz="0 0 0"/>
         <geometry>
-          <mesh filename="package://mygripper/meshes/Link2_convex.stl" scale="${scale} ${scale} ${scale}"/>
+          <mesh filename="package://trimod_gripper/meshes/Link2_convex.stl" scale="${scale} ${scale} ${scale}"/>
         </geometry>
+        <contact_coefficients mu="10.0" kp="100000.0" kd="100000.0" />
       </collision>
 
       <inertial>
@@ -109,6 +112,13 @@
         <box_inertia m="10" x="${link2a*scale}" y="${fingerDepth*scale}" z="${fingerDepth*scale}"/>
       </inertial>
     </link>
+
+      <gazebo reference="${name}_link2">
+          <mu1>10.0</mu1>
+          <mu2>10.0</mu2>
+          <kp>10000000.0</kp>
+          <kd>10000000.0</kd>
+      </gazebo>
 
 <!-- JOINTS -->
 
@@ -186,4 +196,7 @@
     </transmission>
 
   </macro>
+
+
+
 </robot>

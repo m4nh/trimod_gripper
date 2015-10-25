@@ -53,7 +53,7 @@ main(int argc, char** argv) {
 
         std::cout << "Testing node started...\n";
         // Initialize ROS
-        ros::init(argc, argv, "test_mygripper");
+        ros::init(argc, argv, "trimod_gripper");
         ros::NodeHandle nh;
 
         joint_states =  nh.subscribe("/trimod/joint_trajectory_controller/state", 1, joint_state_cb);
@@ -90,7 +90,7 @@ main(int argc, char** argv) {
         float p = 0.0f*M_PI/180.0f;
 
         //float v = 30.0f*M_PI/180.0f;
-        float v = 1.57 - gr.ik_parallel_vertical(0.03);
+        float v = 1.57 - gr.ik_parallel_vertical(0.14);
 
         // Spin
         while (nh.ok() ) {
