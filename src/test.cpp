@@ -90,13 +90,15 @@ main(int argc, char** argv) {
         float p = 0.0f*M_PI/180.0f;
 
         //float v = 30.0f*M_PI/180.0f;
-        float v = 1.57 - gr.ik_parallel_vertical(0.14);
+        float v = 1.57 - gr.ik_parallel_vertical(0.1);
 
         // Spin
         while (nh.ok() ) {
+                std::cout << "Angle: ";
+                std::cin >> v;
+                v = 1.57 - gr.ik_parallel_vertical(v);
 
 
-                if(c=='c') {
                         msg.points[0].positions[0]=-p;
                         msg.points[0].positions[3]=p;
 
@@ -111,7 +113,7 @@ main(int argc, char** argv) {
                         msg.points[0].positions[8]=-v;
 
                         joints_publisher.publish(msg);
-                }
+
                 std::cout << msg<<std::endl;
                 ros::spinOnce();
         }
