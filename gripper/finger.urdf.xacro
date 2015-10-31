@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="trimod" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:property name="scale" value="0.1"/>
   <xacro:property name="fingerDepth" value="0.2"/>
@@ -9,6 +9,7 @@
   <xacro:property name="link2a" value="0.4"/>
   <xacro:property name="effort" value="10"/>
   <xacro:property name="interface" value="PositionJointInterface"/>
+  <xacro:property name="mass" value="0.2"/>
   <!--<xacro:property name="interface" value="EffortJointInterface"/>-->
 
   <macro name="finger" params="name parent *origin">
@@ -31,8 +32,8 @@
       </collision>
       <inertial>
         <origin rpy="0 0 0" xyz="0 0 0"/>
-        <mass value="1"/>
-        <box_inertia m="1" x="0.01" y="0.01" z="0.01"/>
+        <mass value="${mass/4}"/>
+        <box_inertia m="${mass/4}" x="0.01" y="0.01" z="0.01"/>
       </inertial>
     </link>
 
@@ -54,8 +55,8 @@
 
       <inertial>
         <origin rpy="0 0 0" xyz="${fingerDepth*scale*0.5} 0.000000 ${fingerDepth*scale*0.5}"/>
-        <mass value="1000"/>
-        <box_inertia m="1000" x="${link0r*scale}" y="${fingerDepth*scale}" z="${0.2*scale}"/>
+        <mass value="${mass/4}"/>
+        <box_inertia m="${mass/4}" x="${link0r*scale}" y="${fingerDepth*scale}" z="${0.2*scale}"/>
       </inertial>
     </link>
 
@@ -81,8 +82,8 @@
 
       <inertial>
         <origin rpy="0 0 0" xyz="${link1a*scale*0.5} 0.000000 0.000000"/>
-        <mass value="1"/>
-        <box_inertia m="1" x="${link1a*scale}" y="${fingerDepth*scale}" z="${fingerDepth*scale}"/>
+        <mass value="${mass/4}"/>
+        <box_inertia m="${mass/4}" x="${link1a*scale}" y="${fingerDepth*scale}" z="${fingerDepth*scale}"/>
       </inertial>
     </link>
 
@@ -108,8 +109,8 @@
 
       <inertial>
         <origin rpy="0 0 0" xyz="${link2a*scale*0.5} 0.000000 0.000000"/>
-        <mass value="10"/>
-        <box_inertia m="10" x="${link2a*scale}" y="${fingerDepth*scale}" z="${fingerDepth*scale}"/>
+        <mass value="${mass/4}"/>
+        <box_inertia m="${mass/4}" x="${link2a*scale}" y="${fingerDepth*scale}" z="${fingerDepth*scale}"/>
       </inertial>
     </link>
 
@@ -140,7 +141,7 @@
     <joint name="${name}_joint_proximal" type="revolute">
       <parent link="${name}_link0"/>
       <child link="${name}_link1"/>
-      <origin rpy="${pi/2} -${pi/2} 0" xyz="${link0r*scale} 0 ${link0h*scale}"/>
+      <origin rpy="${M_PI/2} -${M_PI/2} 0" xyz="${link0r*scale} 0 ${link0h*scale}"/>
       <axis xyz="0 0 1"/>
       <limit effort="${effort}" lower="${-90 * M_PI / 180}" upper="${50 * M_PI / 180}" velocity="100"/>
       <dynamics damping="1.0" friction="10.0"/>

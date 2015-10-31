@@ -1,7 +1,6 @@
 <?xml version="1.0"?>
-<robot name="trimod" xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot  xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-  <xacro:property name="pi" value="3.1415926535897931"/>
   <xacro:property name="M_PI" value="3.1415926535897931"/>
 
   <xacro:macro name="cuboid_inertia" params="width height length mass">
@@ -19,8 +18,8 @@
              ixy="0" iyz="0" ixz="0"/>
   </xacro:macro>
 
-  <macro name="box_inertia" params="m x:=${x} y z">
+  <xacro:macro name="box_inertia" params="m x:=${x} y z">
     <inertia ixx="${m*(y*y+z*z)/12}" ixy="0" ixz="0" iyy="${m*(x*x+z*z)/12}" iyz="0" izz="${m*(x*x+z*z)/12}"/>
-  </macro>
+  </xacro:macro>
 
 </robot>

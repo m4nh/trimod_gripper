@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+<robot name="trimod" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
   <xacro:include filename="$(find trimod_gripper)/gripper/utils.urdf.xacro"/>
   <xacro:include filename="$(find trimod_gripper)/gripper/finger.urdf.xacro"/>
@@ -9,8 +9,9 @@
   <xacro:property name="gripper_rds" value="${gripper_r + gripper_d*0.5}"/>
   <xacro:property name="gripper_a" value="${0.5774*(gripper_d*0.5+gripper_r)}"/>
   <xacro:property name="gripper_b" value="${(gripper_d*0.5+gripper_r)/0.8660}"/>
+  <xacro:property name="gripper_mass" value="0.2"/>
 
-  
+
   <macro name="trimod" params="name parent *origin">
 
     <link name="${name}_base">
@@ -31,8 +32,8 @@
       </collision>
       <inertial>
         <origin rpy="${M_PI/2} 0 0" xyz="0 0 0"/>
-        <mass value="1000000"/>
-        <cylinder_inertia length="0.01" mass="1000000" radius="0.04"/>
+        <mass value="${gripper_mass}"/>
+        <cylinder_inertia length="0.01" mass="${gripper_mass}" radius="0.04"/>
       </inertial>
     </link>
 
@@ -55,12 +56,20 @@
       <origin rpy="0 0 0" xyz="${gripper_b} 0 0.0"/>
     </finger>
 
+    <gazebo>
+      <plugin filename="libgazebo_ros_control.so" name="trimod_gazebo_ros_control">
+        <robotNamespace>/trimod</robotNamespace>
+      </plugin>
+    </gazebo>
+    <!--<gazebo>
+        <plugin name="${name}_lwr_hw_sim" filename="liblwr_hw_gazebo_plugin.so">
+            <robotNamespace>${name}</robotNamespace>
+        </plugin>
+    </gazebo>-->
+
+
   </macro>
 
-  <gazebo>
-    <plugin filename="libgazebo_ros_control.so" name="gazebo_ros_control">
-      <robotNamespace>/trimod</robotNamespace>
-    </plugin>
-  </gazebo>
+
 
 </robot>
