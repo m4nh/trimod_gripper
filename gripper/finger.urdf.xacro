@@ -115,10 +115,12 @@
     </link>
 
       <gazebo reference="${name}_link2">
-          <mu1>10.0</mu1>
-          <mu2>10.0</mu2>
+          <mu1>300000.0</mu1>
+          <mu2>300000.0</mu2>
           <kp>10000000.0</kp>
           <kd>10000000.0</kd>
+          <slip1>1000.0</slip1>
+          <slip2>1000.0</slip2>
       </gazebo>
 
 <!-- JOINTS -->
