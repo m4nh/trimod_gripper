@@ -57,7 +57,8 @@ main(int argc, char** argv) {
         ros::NodeHandle nh;
 
         joint_states =  nh.subscribe("/trimod/trimod_joint_trajectory_controller/state", 1, joint_state_cb);
-        joints_publisher = nh.advertise<trajectory_msgs::JointTrajectory>("/trimod/trimod_joint_trajectory_controller/command",1);
+        //joints_publisher = nh.advertise<trajectory_msgs::JointTrajectory>("/trimod/trimod_joint_trajectory_controller/command",1);
+        joints_publisher = nh.advertise<trajectory_msgs::JointTrajectory>("/trimod/trimod_joint_trajectory_effort_controller/command",1);
 
 
         trajectory_msgs::JointTrajectory msg;

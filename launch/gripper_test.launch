@@ -7,8 +7,7 @@
 <!-- load all controller configurations to rosparam server -->
   <rosparam command="load" file="$(find trimod_gripper)/controllers/controllers.yaml"/>
 
-  <node args="joint_state_publisher" name="joint_state_publisher_spawner" ns="trimod" output="screen" pkg="controller_manager" respawn="false" type="spawner"/>
-  <node args="joint_trajectory_controller" name="joint_state_controller_spawner" ns="trimod" output="screen" pkg="controller_manager" respawn="false" type="spawner"/>
+  <node args="trimod_joint_trajectory_effort_controller" name="trimod_joint_state_controller_spawner" ns="trimod" output="screen" pkg="controller_manager" respawn="false" type="spawner"/>
 
 <!--add a copy of the robot description within the name space -->
   <param command="$(find xacro)/xacro.py $(find trimod_gripper)/gripper/single_trimod.urdf.xacro" name="robot_description"/>
