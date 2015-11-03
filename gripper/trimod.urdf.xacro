@@ -65,9 +65,11 @@
     <gazebo>
       <gripper name="${name}_gripper">
         <grasp_check>
-          <attach_steps>5</attach_steps>
-          <detach_steps>10</detach_steps>
+          <attach_steps>1</attach_steps>
+          <detach_steps>1</detach_steps>
+          <min_contact_count>3</min_contact_count>
         </grasp_check>
+
         <gripper_link>${name}_finger_left_link2</gripper_link>
         <gripper_link>${name}_finger_right_link2</gripper_link>
         <gripper_link>${name}_finger_center_link2</gripper_link>
