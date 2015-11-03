@@ -61,6 +61,20 @@
         <robotNamespace>/trimod</robotNamespace>
       </plugin>
     </gazebo>
+
+    <gazebo>
+      <gripper name="${name}_gripper">
+        <grasp_check>
+          <attach_steps>5</attach_steps>
+          <detach_steps>10</detach_steps>
+        </grasp_check>
+        <gripper_link>${name}_finger_left_link2</gripper_link>
+        <gripper_link>${name}_finger_right_link2</gripper_link>
+        <gripper_link>${name}_finger_center_link2</gripper_link>
+        <palm_link>${name}_base</palm_link>
+      </gripper>
+    </gazebo>
+
     <!--<gazebo>
         <plugin name="${name}_lwr_hw_sim" filename="liblwr_hw_gazebo_plugin.so">
             <robotNamespace>${name}</robotNamespace>
