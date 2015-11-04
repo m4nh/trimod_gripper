@@ -20,6 +20,10 @@ include_directories(
   ${CMAKE_INCLUDE_PATH}
 )
 
+MESSAGE("#### LAR TOOLS #####")
+find_package(catkin REQUIRED COMPONENTS lar_tools)
+include_directories(${lar_tools_INCLUDE_DIRS})
+
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/cmake/Modules/")
 set(CMAKE_INCLUDE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/include/")

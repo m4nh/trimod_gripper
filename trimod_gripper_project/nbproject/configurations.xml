@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configurationDescriptor version="95">
+  <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
+    <logicalFolder name="src" displayName="src" projectFiles="true" root="../..">
+      <logicalFolder name="kuka-lwr" displayName="kuka-lwr" projectFiles="true">
+        <logicalFolder name="lwr_controllers"
+                       displayName="lwr_controllers"
+                       projectFiles="true">
+          <logicalFolder name="src" displayName="src" projectFiles="true">
+            <itemPath>../../kuka-lwr/lwr_controllers/src/backstepping_controller.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_controllers/src/computed_torque_controller.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_controllers/src/dynamic_sliding_mode_controller.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_controllers/src/dynamic_sliding_mode_controller_task_space.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_controllers/src/full_control_simple.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_controllers/src/gravity_compensation.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_controllers/src/inverse_dynamics_controller.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_controllers/src/joint_impedance_controller.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_controllers/src/minimum_effort_inverse_dynamics.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_controllers/src/multi_task_priority_inverse_dynamics.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_controllers/src/multi_task_priority_inverse_kinematics.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_controllers/src/one_task_inverse_dynamics_jl.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_controllers/src/one_task_inverse_kinematics.cpp</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="lwr_hw" displayName="lwr_hw" projectFiles="true">
+          <logicalFolder name="src" displayName="src" projectFiles="true">
+            <logicalFolder name="fri" displayName="fri" projectFiles="true">
+              <itemPath>../../kuka-lwr/lwr_hw/src/fri/friremote.cpp</itemPath>
+              <itemPath>../../kuka-lwr/lwr_hw/src/fri/friudp.cpp</itemPath>
+            </logicalFolder>
+            <itemPath>../../kuka-lwr/lwr_hw/src/lwr_hw.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_hw/src/lwr_hw_fri_node.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_hw/src/lwr_hw_fril_node.cpp</itemPath>
+            <itemPath>../../kuka-lwr/lwr_hw/src/lwr_hw_gazebo_plugin.cpp</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="lwr_testing" displayName="lwr_testing" projectFiles="true">
+          <logicalFolder name="src" displayName="src" projectFiles="true">
+            <itemPath>../../kuka-lwr/lwr_testing/src/lwr_test.cpp</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="lar_tools" displayName="lar_tools" projectFiles="true">
+        <logicalFolder name="src" displayName="src" projectFiles="true">
+          <logicalFolder name="nodes" displayName="nodes" projectFiles="true">
+            <logicalFolder name="test" displayName="test" projectFiles="true">
+              <itemPath>../../lar_tools/src/nodes/test/testing_node.cpp</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="utils" displayName="utils" projectFiles="true">
+            <itemPath>../../lar_tools/src/utils/UDPNode.cpp</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+    </logicalFolder>
+    <df root=".." name="0">
+      <df name="src">
+        <in>test.cpp</in>
+      </df>
+    </df>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="false"
+                   kind="IMPORTANT_FILES_FOLDER">
+      <itemPath>../CMakeLists.txt</itemPath>
+      <itemPath>../../../build/Makefile</itemPath>
+    </logicalFolder>
+  </logicalFolder>
+  <sourceFolderFilter>^(nbproject)$</sourceFolderFilter>
+  <sourceRootList>
+    <Elem>..</Elem>
+  </sourceRootList>
+  <projectmakefile>../../../build/Makefile</projectmakefile>
+  <confs>
+    <conf name="Default" type="0">
+      <toolsSet>
+        <compilerSet>default</compilerSet>
+        <dependencyChecking>false</dependencyChecking>
+        <rebuildPropChanged>false</rebuildPropChanged>
+      </toolsSet>
+      <flagsDictionary>
+        <element flagsID="0" commonFlags="-fPIC"/>
+        <element flagsID="1" commonFlags="-fPIC -std=c++11"/>
+        <element flagsID="2" commonFlags="-std=c++11"/>
+      </flagsDictionary>
+      <codeAssistance>
+      </codeAssistance>
+      <makefileType>
+        <makeTool>
+          <buildCommandWorkingDir>../../../build</buildCommandWorkingDir>
+          <buildCommand>${MAKE} -f Makefile -j5</buildCommand>
+          <cleanCommand>${MAKE} -f Makefile clean -j5</cleanCommand>
+          <executablePath></executablePath>
+          <ccTool>
+            <preprocessorList>
+              <Elem>ROSCONSOLE_BACKEND_LOG4CXX</Elem>
+              <Elem>ROS_BUILD_SHARED_LIBS=1</Elem>
+              <Elem>ROS_PACKAGE_NAME="lwr_controllers"</Elem>
+            </preprocessorList>
+          </ccTool>
+        </makeTool>
+      </makefileType>
+      <item path="../../kuka-lwr/lwr_controllers/src/backstepping_controller.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_controllers/src/computed_torque_controller.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_controllers/src/dynamic_sliding_mode_controller.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_controllers/src/dynamic_sliding_mode_controller_task_space.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_controllers/src/full_control_simple.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_controllers/src/gravity_compensation.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_controllers/src/inverse_dynamics_controller.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_controllers/src/joint_impedance_controller.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_controllers/src/minimum_effort_inverse_dynamics.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_controllers/src/multi_task_priority_inverse_dynamics.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_controllers/src/multi_task_priority_inverse_kinematics.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_controllers/src/one_task_inverse_dynamics_jl.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_controllers/src/one_task_inverse_kinematics.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_hw/src/fri/friremote.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_hw/src/fri/friudp.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_hw/src/lwr_hw.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+          <preprocessorList>
+            <Elem>lwr_hw_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_hw/src/lwr_hw_fri_node.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_hw/src/lwr_hw_fril_node.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="2">
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_hw/src/lwr_hw_gazebo_plugin.cpp"
+            ex="false"
+            tool="1"
+            flavor2="8">
+        <ccTool flags="1">
+          <preprocessorList>
+            <Elem>lwr_hw_gazebo_plugin_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </item>
+      <item path="../../kuka-lwr/lwr_testing/src/lwr_test.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+      </item>
+      <item path="../../lar_tools/src/nodes/test/testing_node.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+      </item>
+      <item path="../../lar_tools/src/utils/UDPNode.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+        <ccTool flags="0">
+        </ccTool>
+      </item>
+      <item path="../src/test.cpp" ex="false" tool="1" flavor2="4">
+      </item>
+      <folder path="0">
+        <ccTool>
+          <incDir>
+            <pElem>/opt/ros/indigo/include</pElem>
+            <pElem>/usr/include/opencv</pElem>
+            <pElem>/usr/include/eigen3</pElem>
+            <pElem>/usr/include/pcl-1.7</pElem>
+            <pElem>/usr/include/ni</pElem>
+            <pElem>/usr/include/vtk-5.8</pElem>
+            <pElem>../../lar_tools/include</pElem>
+            <pElem>/usr/local/include/pcl-1.8</pElem>
+            <pElem>/usr/include/openni2</pElem>
+            <pElem>/usr/local/include/opencv</pElem>
+            <pElem>/usr/local/include</pElem>
+            <pElem>../../../build/trimod_gripper</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>DISABLE_DAVIDSDK</Elem>
+            <Elem>DISABLE_ENSENSO</Elem>
+            <Elem>DISABLE_PCAP</Elem>
+            <Elem>DISABLE_PNG</Elem>
+            <Elem>DISABLE_QHULL</Elem>
+            <Elem>EIGEN_USE_NEW_STDVECTOR</Elem>
+            <Elem>EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET</Elem>
+            <Elem>FLANN_STATIC</Elem>
+            <Elem>ROS_PACKAGE_NAME="trimod_gripper"</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="src/kuka-lwr">
+        <ccTool>
+          <incDir>
+            <pElem>../../../devel/include</pElem>
+            <pElem>../../kuka-lwr/lwr_controllers/include</pElem>
+            <pElem>/opt/ros/indigo/include</pElem>
+            <pElem>/usr/include/eigen3</pElem>
+            <pElem>../../../build/kuka-lwr/lwr_controllers</pElem>
+          </incDir>
+        </ccTool>
+      </folder>
+      <folder path="src/kuka-lwr/lwr_controllers">
+        <ccTool>
+          <preprocessorList>
+            <Elem>lwr_controllers_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="src/kuka-lwr/lwr_hw">
+        <ccTool>
+          <incDir>
+            <pElem>../../kuka-lwr/lwr_hw/include</pElem>
+            <pElem>../../../devel/include/fril</pElem>
+            <pElem>/usr/include/gazebo-6.5</pElem>
+            <pElem>/usr/include/sdformat-3.6</pElem>
+            <pElem>/usr/include/ignition/math2</pElem>
+            <pElem>/usr/include/OGRE</pElem>
+            <pElem>/usr/include/OGRE/Terrain</pElem>
+            <pElem>/usr/include/OGRE/Paging</pElem>
+            <pElem>../../../build/kuka-lwr/lwr_hw</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>ROS_PACKAGE_NAME="lwr_hw"</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="src/kuka-lwr/lwr_hw/src/fri">
+        <ccTool>
+          <preprocessorList>
+            <Elem>friremote_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="src/kuka-lwr/lwr_testing">
+        <ccTool>
+          <incDir>
+            <pElem>/usr/include/opencv</pElem>
+            <pElem>/usr/include/pcl-1.7</pElem>
+            <pElem>/usr/include/ni</pElem>
+            <pElem>/usr/include/vtk-5.8</pElem>
+            <pElem>/usr/local/include/pcl-1.8</pElem>
+            <pElem>/usr/include/openni2</pElem>
+            <pElem>/usr/local/include/opencv</pElem>
+            <pElem>/usr/local/include</pElem>
+            <pElem>../../../build/kuka-lwr/lwr_testing</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>DISABLE_DAVIDSDK</Elem>
+            <Elem>DISABLE_ENSENSO</Elem>
+            <Elem>DISABLE_PCAP</Elem>
+            <Elem>DISABLE_PNG</Elem>
+            <Elem>DISABLE_QHULL</Elem>
+            <Elem>EIGEN_USE_NEW_STDVECTOR</Elem>
+            <Elem>EIGEN_YES_I_KNOW_SPARSE_MODULE_IS_NOT_STABLE_YET</Elem>
+            <Elem>FLANN_STATIC</Elem>
+            <Elem>ROS_PACKAGE_NAME="lwr_testing"</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="src/lar_tools">
+        <ccTool>
+          <incDir>
+            <pElem>/opt/ros/indigo/include</pElem>
+            <pElem>../../lar_tools/include</pElem>
+            <pElem>../../lar_tools/include/utils</pElem>
+            <pElem>../../../build/lar_tools</pElem>
+          </incDir>
+          <preprocessorList>
+            <Elem>ROS_PACKAGE_NAME="lar_tools"</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+      <folder path="src/lar_tools/src/utils">
+        <ccTool>
+          <preprocessorList>
+            <Elem>lar_tools_EXPORTS</Elem>
+          </preprocessorList>
+        </ccTool>
+      </folder>
+    </conf>
+  </confs>
+</configurationDescriptor>

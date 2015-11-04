@@ -10,6 +10,7 @@
 #include <trajectory_msgs/JointTrajectoryPoint.h>
 #include <control_msgs/JointTrajectoryControllerState.h>
 
+
 ros::Subscriber joint_states;
 ros::Publisher joints_publisher;
 
