@@ -24,7 +24,8 @@
         </df>
       </df>
       <df name="src">
-        <in>test.cpp</in>
+        <in>lwr_manual_photographer.cpp</in>
+        <in>lwr_udp_to_controllers.cpp</in>
       </df>
       <df name="trimod_gripper_project">
       </df>

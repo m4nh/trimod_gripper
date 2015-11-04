@@ -42,20 +42,23 @@
       </logicalFolder>
       <logicalFolder name="lar_tools" displayName="lar_tools" projectFiles="true">
         <logicalFolder name="src" displayName="src" projectFiles="true">
+          <logicalFolder name="lar_tool_utils"
+                         displayName="lar_tool_utils"
+                         projectFiles="true">
+            <itemPath>../../lar_tools/src/lar_tool_utils/UDPNode.cpp</itemPath>
+          </logicalFolder>
           <logicalFolder name="nodes" displayName="nodes" projectFiles="true">
             <logicalFolder name="test" displayName="test" projectFiles="true">
               <itemPath>../../lar_tools/src/nodes/test/testing_node.cpp</itemPath>
             </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="utils" displayName="utils" projectFiles="true">
-            <itemPath>../../lar_tools/src/utils/UDPNode.cpp</itemPath>
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
     </logicalFolder>
     <df root=".." name="0">
       <df name="src">
-        <in>test.cpp</in>
+        <in>lwr_manual_photographer.cpp</in>
+        <in>lwr_udp_to_controllers.cpp</in>
       </df>
     </df>
     <logicalFolder name="ExternalFiles"
@@ -244,19 +247,21 @@
             tool="1"
             flavor2="4">
       </item>
-      <item path="../../lar_tools/src/nodes/test/testing_node.cpp"
-            ex="false"
-            tool="1"
-            flavor2="4">
-      </item>
-      <item path="../../lar_tools/src/utils/UDPNode.cpp"
+      <item path="../../lar_tools/src/lar_tool_utils/UDPNode.cpp"
             ex="false"
             tool="1"
             flavor2="4">
         <ccTool flags="0">
         </ccTool>
       </item>
-      <item path="../src/test.cpp" ex="false" tool="1" flavor2="4">
+      <item path="../../lar_tools/src/nodes/test/testing_node.cpp"
+            ex="false"
+            tool="1"
+            flavor2="4">
+      </item>
+      <item path="../src/lwr_manual_photographer.cpp" ex="false" tool="1" flavor2="4">
+      </item>
+      <item path="../src/lwr_udp_to_controllers.cpp" ex="false" tool="1" flavor2="4">
       </item>
       <folder path="0">
         <ccTool>
@@ -290,7 +295,7 @@
           </preprocessorList>
         </ccTool>
       </folder>
-      <folder path="src/kuka-lwr">
+      <folder path="src/kuka-lwr/lwr_controllers">
         <ccTool>
           <incDir>
             <pElem>../../../devel/include</pElem>
@@ -299,10 +304,6 @@
             <pElem>/usr/include/eigen3</pElem>
             <pElem>../../../build/kuka-lwr/lwr_controllers</pElem>
           </incDir>
-        </ccTool>
-      </folder>
-      <folder path="src/kuka-lwr/lwr_controllers">
-        <ccTool>
           <preprocessorList>
             <Elem>lwr_controllers_EXPORTS</Elem>
           </preprocessorList>
@@ -312,6 +313,8 @@
         <ccTool>
           <incDir>
             <pElem>../../kuka-lwr/lwr_hw/include</pElem>
+            <pElem>/opt/ros/indigo/include</pElem>
+            <pElem>/usr/include/eigen3</pElem>
             <pElem>../../../devel/include/fril</pElem>
             <pElem>/usr/include/gazebo-6.5</pElem>
             <pElem>/usr/include/sdformat-3.6</pElem>
@@ -336,7 +339,11 @@
       <folder path="src/kuka-lwr/lwr_testing">
         <ccTool>
           <incDir>
+            <pElem>../../../devel/include</pElem>
+            <pElem>../../kuka-lwr/lwr_controllers/include</pElem>
+            <pElem>/opt/ros/indigo/include</pElem>
             <pElem>/usr/include/opencv</pElem>
+            <pElem>/usr/include/eigen3</pElem>
             <pElem>/usr/include/pcl-1.7</pElem>
             <pElem>/usr/include/ni</pElem>
             <pElem>/usr/include/vtk-5.8</pElem>
@@ -363,8 +370,10 @@
         <ccTool>
           <incDir>
             <pElem>/opt/ros/indigo/include</pElem>
+            <pElem>/usr/include/eigen3</pElem>
+            <pElem>../../lar_tools/EIGEN3_INCLUDE_DIR</pElem>
             <pElem>../../lar_tools/include</pElem>
-            <pElem>../../lar_tools/include/utils</pElem>
+            <pElem>../../lar_tools/include/lar_tool_utils</pElem>
             <pElem>../../../build/lar_tools</pElem>
           </incDir>
           <preprocessorList>
@@ -372,7 +381,7 @@
           </preprocessorList>
         </ccTool>
       </folder>
-      <folder path="src/lar_tools/src/utils">
+      <folder path="src/lar_tools/src/lar_tool_utils">
         <ccTool>
           <preprocessorList>
             <Elem>lar_tools_EXPORTS</Elem>

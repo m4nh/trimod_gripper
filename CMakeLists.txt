@@ -45,8 +45,6 @@ if (OPENCV_FOUND)
   message(${OpenCV_LIBS})
 endif(OPENCV_FOUND)
 
-#Aruco
-set(ARUCO_LIBS /usr/local/lib/libaruco.so)
 
 #VisionSystemLegacy
 #set(VISION_SYSTEM_LIBS /usr/local/lib/libVisionSystemLegacy.so)
@@ -57,10 +55,16 @@ catkin_package(
    message_runtime
    geometry_msgs
    std_msgs
+
 )
 
+## NODES
 
-# lwr hw fri node
-add_executable(test_mygripper  src/test.cpp)
-target_link_libraries(test_mygripper ${catkin_LIBRARIES} ${OpenCV_LIBS} ${PCL_LIBRARIES})
-#add_dependencies(lwr_test lwr_testing_generate_messages_cpp)
+# UDP TO CONTROLLER
+add_executable(lwr_udp_to_controllers  src/lwr_udp_to_controllers.cpp)
+target_link_libraries(lwr_udp_to_controllers ${catkin_LIBRARIES} )
+
+# MANUAL PHOTOGRAPHER
+add_executable(lwr_manual_photographer  src/lwr_manual_photographer.cpp)
+target_link_libraries(lwr_manual_photographer ${OpenCV_LIBS} ${catkin_LIBRARIES}  ${PCL_LIBRARIES})
+

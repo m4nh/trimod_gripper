@@ -22,6 +22,18 @@ public:
 private slots:
     void on_j0_slider_valueChanged(int value);
 
+    void on_j1_slider_valueChanged(int value);
+
+    void on_j2_slider_valueChanged(int value);
+
+    void on_j3_slider_valueChanged(int value);
+
+    void on_j4_slider_valueChanged(int value);
+
+    void on_j5_slider_valueChanged(int value);
+
+    void on_j6_slider_valueChanged(int value);
+
 private:
     Ui::MainWindow *ui;
     QUdpSocket* socket;
@@ -30,8 +42,11 @@ private:
     struct UDPMessage{
         int command;
         long time;
-        float payload[16];
+        float payload[32];
     };
+
+    UDPMessage joint_message;
+    void updateJoint(int index, float value);
 };
 
 #endif // MAINWINDOW_H
