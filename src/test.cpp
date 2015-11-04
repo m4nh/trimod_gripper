@@ -4,47 +4,47 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-
+#include <lwr_controllers/PoseRPY.h>
 #include <sensor_msgs/JointState.h>
 #include <trajectory_msgs/JointTrajectory.h>
 #include <trajectory_msgs/JointTrajectoryPoint.h>
-#include <control_msgs/JointTrajectoryControllerState.h>
+
+#include <pcl_conversions/pcl_conversions.h>
+#include <pcl/point_cloud.h>
+#include <pcl/point_types.h>
+#include <pcl/visualization/pcl_visualizer.h>
+#include <pcl/filters/voxel_grid.h>
+#include <pcl/filters/passthrough.h>
+#include <tf/transform_listener.h>
+#include "pcl_ros/transforms.h"
+#include "pcl_ros/impl/transforms.hpp"
+#include <opencv2/opencv.hpp>
+#include <opencv2/highgui/highgui.hpp>
+#include <kdl/frames_io.hpp>
+
+#include "lar_tool_utils/UDPNode.h"
+
+using namespace std;
+
+void
+pose_cb(const lwr_controllers::PoseRPY& pose) {
+    KDL::Frame frame;
+
+}
 
 
-ros::Subscriber joint_states;
-ros::Publisher joints_publisher;
-
-sensor_msgs::JointState joint_msg;
-char mode = 'j';
-
-struct TestGripper{
-    float r;
-    float d;
-    float a;
-    float b;
-    float S;
-    float tetha;
-    float l1;
-    float l2;
-
-    TestGripper(float r,float l1,float l2){
-      this->r = r;
-      this->l1=l1;
-      this->l2=l2;
-      this->d=1.4641f*r;
-      this->a=0.5774f*(this->d*0.5f+this->r);
-      this->b=(this->d*0.5f+this->r)/0.8660f;
-      this->S=(2.0f*r+this->a+this->b);
-    }
-
-    float ik_parallel_vertical(float Gr){
-        return acos((-Gr+this->S)/(2*this->l1));
-    }
-
-};
 
 
-void joint_state_cb( const control_msgs::JointTrajectoryControllerState& msg){
+
+//ros::Publisher pose_publisher;
+//ros::Publisher joints_publisher;
+//ros::Subscriber sub;
+//ros::Subscriber sub_pose;
+
+lwr_controllers::PoseRPY pose;
+
+void updateCommands() {
+
 
 }
 
@@ -52,71 +52,34 @@ void joint_state_cb( const control_msgs::JointTrajectoryControllerState& msg){
 int
 main(int argc, char** argv) {
 
-        std::cout << "Testing node started...\n";
-        // Initialize ROS
-        ros::init(argc, argv, "trimod_gripper");
-        ros::NodeHandle nh;
-
-        joint_states =  nh.subscribe("/trimod/trimod_joint_trajectory_controller/state", 1, joint_state_cb);
-        //joints_publisher = nh.advertise<trajectory_msgs::JointTrajectory>("/trimod/trimod_joint_trajectory_controller/command",1);
-        joints_publisher = nh.advertise<trajectory_msgs::JointTrajectory>("/trimod/trimod_joint_trajectory_effort_controller/command",1);
+    std::cout << "Testing node started...\n";
+    // Initialize ROS
+    ros::init(argc, argv, "");
+    ros::NodeHandle nh;
 
 
-        trajectory_msgs::JointTrajectory msg;
-        msg.joint_names.resize(9);
+    //        pose_publisher = nh.advertise<lwr_controllers::PoseRPY>("/lwr/full_control_simple/command", 1);
+    //pose_publisher = nh.advertise<lwr_controllers::PoseRPY>("/lwr/one_task_inverse_kinematics/command", 1);
 
-        int i = 0;
-        msg.joint_names[i++] = "trimod_finger_left_joint_palm";
-        msg.joint_names[i++] = "trimod_finger_left_joint_proximal";
-        msg.joint_names[i++] = "trimod_finger_left_joint_distal";
-        msg.joint_names[i++] = "trimod_finger_right_joint_palm";
-        msg.joint_names[i++] = "trimod_finger_right_joint_proximal";
-        msg.joint_names[i++] = "trimod_finger_right_joint_distal";
-        msg.joint_names[i++] = "trimod_finger_center_joint_palm";
-        msg.joint_names[i++] = "trimod_finger_center_joint_proximal";
-        msg.joint_names[i++] = "trimod_finger_center_joint_distal";
-
-        msg.points.resize(1);
-        trajectory_msgs::JointTrajectoryPoint point;
-        msg.points[0] = point;
-        msg.points[0].time_from_start = ros::Duration(1);
-        msg.points[0].positions.resize(9);
-        for (size_t i = 0; i < 9; i++) {
-                msg.points[0].positions[i] = 0;
-        }
-
-        TestGripper gr(0.02f,0.06f,0.04f);
-
-        char c;
-        std::cin >> c;
-        float p = 0.0f*M_PI/180.0f;
-
-        //float v = 30.0f*M_PI/180.0f;
-        float v = 1.57 - gr.ik_parallel_vertical(0.1);
-
-        // Spin
-        while (nh.ok() ) {
-                std::cout << "Angle: ";
-                std::cin >> v;
-                v = 1.57 - gr.ik_parallel_vertical(v);
+    //        joints_publisher = nh.advertise<sensor_msgs::JointState>("/lwr/full_control_simple/command_joints", 1);
+    //        sub = nh.subscribe("/xtion/xtion/depth/points", 1, cloud_cb);
+    //        sub_pose = nh.subscribe("/lwr/full_control_simple/current_pose", 1, pose_cb);
 
 
-                        msg.points[0].positions[0]=-p;
-                        msg.points[0].positions[3]=p;
+    // Spin
 
-                        msg.points[0].positions[1]=v;
-                        msg.points[0].positions[2]=-v;
+    boost::thread updateTFsThread(updateCommands);
 
+    lar_tools::UDPNode node(9999);
+    lar_tools::UDPNodeMessage message;
+    
+    // Spin
+    while (nh.ok() && node.isReady()) {
+        ROS_INFO("Waiting message.");
+        node.receiveMessage(message);
+        ROS_INFO("Received/n command:%d/n time:%d/n data:%f/n-----------/n",message.command,message.time,message.payload[0]);
+        ros::spinOnce();
+    }
 
-                        msg.points[0].positions[4]=v;
-                        msg.points[0].positions[5]=-v;
-
-                        msg.points[0].positions[7]=v;
-                        msg.points[0].positions[8]=-v;
-
-                        joints_publisher.publish(msg);
-
-                std::cout << msg<<std::endl;
-                ros::spinOnce();
-        }
+    updateTFsThread.join();
 }

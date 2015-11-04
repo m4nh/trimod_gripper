@@ -261,6 +261,8 @@
       <folder path="0">
         <ccTool>
           <incDir>
+            <pElem>../../../devel/include</pElem>
+            <pElem>../../kuka-lwr/lwr_controllers/include</pElem>
             <pElem>/opt/ros/indigo/include</pElem>
             <pElem>/usr/include/opencv</pElem>
             <pElem>/usr/include/eigen3</pElem>
@@ -268,6 +270,7 @@
             <pElem>/usr/include/ni</pElem>
             <pElem>/usr/include/vtk-5.8</pElem>
             <pElem>../../lar_tools/include</pElem>
+            <pElem>../../lar_tools/include/lar_tool_utils</pElem>
             <pElem>/usr/local/include/pcl-1.8</pElem>
             <pElem>/usr/include/openni2</pElem>
             <pElem>/usr/local/include/opencv</pElem>

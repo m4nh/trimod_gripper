@@ -6,6 +6,17 @@
       </df>
       <df name="gripper">
       </df>
+      <df name="gui">
+        <df name="build-gui_test-Desktop_Qt_5_5_0_GCC_64bit-Debug">
+          <in>moc_mainwindow.cpp</in>
+          <in>ui_mainwindow.h</in>
+        </df>
+        <df name="gui_test">
+          <in>main.cpp</in>
+          <in>mainwindow.cpp</in>
+          <in>mainwindow.h</in>
+        </df>
+      </df>
       <df name="launch">
       </df>
       <df name="meshes">

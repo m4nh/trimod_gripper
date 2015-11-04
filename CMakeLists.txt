@@ -13,6 +13,7 @@ find_package(catkin REQUIRED COMPONENTS
   message_runtime
   pcl_ros
   kdl_parser
+  lwr_controllers
 )
 
 include_directories(
