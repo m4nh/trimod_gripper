@@ -32,7 +32,6 @@ pcl::PointCloud<PointType>::Ptr cloud_trans(new pcl::PointCloud<PointType>);
 pcl::PointCloud<PointType>::Ptr cloud_full_filtered(new pcl::PointCloud<PointType>);
 pcl::PointCloud<PointType>::Ptr cloud(new pcl::PointCloud<PointType>);
 std::string save_folder;
-int save_counter = 0;
 
 
 
@@ -63,13 +62,30 @@ cloud_cb(const sensor_msgs::PointCloud2ConstPtr& input) {
     viewer->addPointCloud(cloud_trans, "scene");
     viewer->addPointCloud(cloud_full, "scene_full");
 }
-
+cv::Mat current_rgb;
+cv::Mat current_depth;
+bool saving = false;
+bool rgb_ready = false;
+bool depth_ready = false;
 void
 rgb_cb(const sensor_msgs::ImageConstPtr& msg) {
+  if(saving)return;
     try {
-        cv::Mat source =cv_bridge::toCvShare(msg, "bgr8")->image;
-        cv::imshow("rgb", source);
-        cv::waitKey(30);
+        rgb_ready=false;
+        current_rgb =cv_bridge::toCvCopy(msg, "bgr8")->image;
+        rgb_ready=true;
+    } catch (cv_bridge::Exception& e) {
+        ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
+    }
+}
+
+void
+depth_cb(const sensor_msgs::ImageConstPtr& msg) {
+  if(saving)return;
+    try {
+        depth_ready=false;
+        current_depth =cv_bridge::toCvCopy(msg, "32FC1")->image;
+        depth_ready=true;
     } catch (cv_bridge::Exception& e) {
         ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
     }
@@ -91,29 +107,48 @@ pose_cb(const lwr_controllers::PoseRPY& pose) {
     T_0_CAMERA = T_0_ROBOT * T_0_CAMERA;
     T_0_CAMERA = T_0_CAMERA * T_EE;
 }
-
+int save_counter=0;
 void keyboardEventOccurred(const pcl::visualization::KeyboardEvent &event,
         void* viewer_void) {
     //    boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer = *static_cast<boost::shared_ptr<pcl::visualization::PCLVisualizer> *> (viewer_void);
     if (event.getKeySym() == "v" && event.keyDown()) {
         if (cloud->points.size() > 1000) {
-            (*cloud_full) += (*cloud_trans);
+            //(*cloud_full) += (*cloud_trans);
             //            //
-            //            //                        std::ofstream myfile;
-            //            //                        std::stringstream ss;
-            //            //                        ss << save_folder << "/" << save_counter << ".txt";
+            saving = true;
+            while(!rgb_ready);
+            while(!depth_ready);
+            std::string save_folder = "/home/daniele/temp/0.000000000";
+
+            for(int i =0; i < 1; i++){
+                                std::ofstream myfile;
+                                    std::stringstream ss;
+                              ss << save_folder << "/" << save_counter << ".txt";
+
+                               myfile.open(ss.str().c_str());
+                                 myfile << T_0_CAMERA;
+                                   myfile.close();
             //            //
-            //            //                        myfile.open(ss.str().c_str());
-            //            //                        myfile << T;
-            //            //                        myfile.close();
             //            //
-            //            //
-            //            //                        ss.str("");
-            //            //                        ss << save_folder << "/" << save_counter << ".pcd";
-            //            //                        pcl::io::savePCDFileASCII(ss.str().c_str(), *cloud);
+                               ss.str("");
+                                  ss << save_folder << "/" << save_counter << ".png";
+                                  cv::imwrite(ss.str(),current_rgb);
+
+                                  ss.str("");
+                                  ss << save_folder << "/" << save_counter << "_depth.png";
+                                  cv::Mat ucharMat;
+                                  current_depth.convertTo(ucharMat, CV_16UC1, 65535, 0);
+                                  cv::imwrite(ss.str(),ucharMat);
+
+                                  ss.str("");
+                                       ss << save_folder << "/" << save_counter << ".pcd";
+                                       pcl::io::savePCDFileASCII(ss.str().c_str(), *cloud);
+
             //            //
             //            //                        std::cout << "Saved snapshot: " << save_counter << std::endl;
-            //            //                        save_counter++;
+                  save_counter++;
+                }
+                  saving = false;
             //        }
         }
     }
@@ -156,9 +191,10 @@ main(int argc, char** argv) {
 
     sub_cloud = nh.subscribe("/xtion/xtion/depth/points", 1, cloud_cb);
     sub_pose = nh.subscribe("/lwr/full_control_simple/current_pose", 1, pose_cb);
-    
+
     image_transport::ImageTransport it(nh);
-//    sub_rgb = it.subscribe("/xtion/xtion/rgb/image_raw", 1, rgb_cb);
+    sub_rgb = it.subscribe("/xtion/xtion/rgb/image_raw", 1, rgb_cb);
+    sub_depth = it.subscribe("/xtion/xtion/depth/image_raw", 1, depth_cb);
 
     // Spin
 
