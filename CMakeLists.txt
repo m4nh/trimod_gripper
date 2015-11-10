@@ -18,6 +18,7 @@ find_package(catkin REQUIRED COMPONENTS
   pcl_ros
   kdl_parser
   lar_tools
+  lwr_controllers
 )
 
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}/cmake/Modules/")
@@ -25,7 +26,7 @@ set(CMAKE_INCLUDE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/${PROJECT_NAME}
 
 
 #PCL
-find_package(PCL REQUIRED  )
+find_package(PCL 1.8 REQUIRED  )
 include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
@@ -46,6 +47,7 @@ set(ARUCO_LIBS /usr/local/lib/libaruco.so)
 MESSAGE("#### LAR TOOLS #####")
 find_package(lar_tools)
 include_directories(${lar_tools_INCLUDE_DIRS})
+
 
 #VisionSystemLegacy
 #set(VISION_SYSTEM_LIBS /usr/local/lib/libVisionSystemLegacy.so)
