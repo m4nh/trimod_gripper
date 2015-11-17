@@ -1,0 +1,28 @@
+<launch>
+<!-- LAUNCH INTERFACE -->
+
+<!-- in case you have different robot configurations -->
+  <arg default="trimod" name="robot_name"/>
+
+<!-- load all controller configurations to rosparam server -->
+  <rosparam command="load" file="$(find trimod_gripper)/controllers/controllers.yaml"/>
+
+  <node args="trimod_joint_trajectory_effort_controller" name="trimod_joint_state_controller_spawner" ns="trimod" output="screen" pkg="controller_manager" respawn="false" type="spawner"/>
+
+<!--add a copy of the robot description within the name space -->
+  <param command="$(find xacro)/xacro.py $(find trimod_gripper)/gripper/single_trimod_up.urdf.xacro" name="robot_description"/>
+
+  <node args="-param robot_description -urdf -model $(arg robot_name)" name="spawn_urdf" output="screen" pkg="gazebo_ros" respawn="false" type="spawn_model"/>
+
+<!-- enable/disable gui at will, the rviz listens to the simulation -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find trimod_gripper)/worlds/empty_world.world"/>
+    <arg name="paused" value="true"/>
+    <arg name="use_sim_time" value="true"/>
+    <arg name="gui" value="true"/>
+    <arg name="headless" value="false"/>
+    <arg name="debug" value="false"/>
+
+  </include>
+
+</launch>

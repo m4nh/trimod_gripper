@@ -108,6 +108,7 @@
         <mass value="${mass/4}"/>
         <box_inertia m="${mass/4}" x="${link2a*scale}" y="${fingerDepth*scale}" z="${fingerDepth*scale}"/>
       </inertial>
+
     </link>
 
     <gazebo reference="${name}_link2">
@@ -116,7 +117,7 @@
       <mu1>Inf</mu1>
       <mu2>Inf</mu2>
 
-      <!--
+<!--
       <sensor name="${name}_fixed_jaw_contact_sensor" type="contact">
         <always_on>true</always_on>
         <update_rate>20</update_rate>
@@ -130,7 +131,6 @@
         </plugin>
       </sensor>
     -->
-
 
     </gazebo>
 

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<robot name="trimod" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <xacro:include filename="$(find trimod_gripper)/gripper/trimod.urdf.xacro"/>
+
+
+  <link name="world" />
+
+  <trimod name="trimod" parent="world">
+    <origin rpy="0 0 0" xyz="0 0 0.4"/>
+  </trimod>
+
+</robot>

@@ -12,22 +12,20 @@
   <xacro:property name="gripper_mass" value="0.2"/>
 
 
+
   <macro name="trimod" params="name parent *origin">
 
     <link name="${name}_base">
       <visual>
-        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <origin rpy="0 0 0" xyz="0 0 -0.02"/>
         <geometry>
-          <cylinder length="0.01" radius="0.04"/>
+          <cylinder length="0.04" radius="0.04"/>
         </geometry>
-        <material name="blue">
-          <color rgba="0 0 .8 1"/>
-        </material>
       </visual>
       <collision>
-        <origin rpy="0 0 0" xyz="0 0 0"/>
+        <origin rpy="0 0 0" xyz="0 0 -0.02"/>
         <geometry>
-          <cylinder length="0.01" radius="0.04"/>
+          <cylinder length="0.04" radius="0.04"/>
         </geometry>
       </collision>
       <inertial>
@@ -77,6 +75,21 @@
       </gripper>
     </gazebo>
 
+
+
+
+    <gazebo reference="${name}_finger_left">
+      <material>Gazebo/Red</material>
+    </gazebo>
+    <gazebo reference="${name}_finger_right">
+      <material>Gazebo/Red</material>
+    </gazebo>
+    <gazebo reference="${name}_finger_center">
+      <material>Gazebo/Red</material>
+    </gazebo>
+    <gazebo reference="${name}_base">
+      <material>Gazebo/Grey</material>
+    </gazebo>
     <!--<gazebo>
         <plugin name="${name}_lwr_hw_sim" filename="liblwr_hw_gazebo_plugin.so">
             <robotNamespace>${name}</robotNamespace>

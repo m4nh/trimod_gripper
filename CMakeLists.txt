@@ -17,7 +17,6 @@ find_package(catkin REQUIRED COMPONENTS
   message_runtime
   pcl_ros
   kdl_parser
-  lar_tools
   lwr_controllers
 )
 
@@ -48,9 +47,18 @@ MESSAGE("#### LAR TOOLS #####")
 find_package(lar_tools)
 include_directories(${lar_tools_INCLUDE_DIRS})
 
+MESSAGE("#### LAR VISION #####")
+find_package(lar_vision)
+include_directories(${lar_vision_INCLUDE_DIRS})
 
+ 
 #VisionSystemLegacy
 #set(VISION_SYSTEM_LIBS /usr/local/lib/libVisionSystemLegacy.so)
+
+generate_dynamic_reconfigure_options(
+  cfg/comau_clusterizer.cfg
+)
+
 
 generate_messages(
   DEPENDENCIES
@@ -80,6 +88,8 @@ catkin_package(
 #    MarkerImageService.srv
 # )
 
+#add dynamic reconfigure api
+#find_package(catkin REQUIRED dynamic_reconfigure)
 
 include_directories(
   ${catkin_INCLUDE_DIRS}
@@ -92,11 +102,23 @@ include_directories(
 MESSAGE(CIAO)
 MESSAGE(${CMAKE_INCLUDE_PATH})
 
+# TEST
+add_executable(testing  src/test.cpp)
+target_link_libraries(testing ${catkin_LIBRARIES} lar_tools )
+
 
 # UDP TO CONTROLLER
 add_executable(lwr_udp_to_controllers  src/lwr_udp_to_controllers.cpp)
-target_link_libraries(lwr_udp_to_controllers ${catkin_LIBRARIES} )
+target_link_libraries(lwr_udp_to_controllers ${catkin_LIBRARIES} lar_tools)
 
 # MANUAL PHOTOGRAPHER
 add_executable(lwr_manual_photographer  src/lwr_manual_photographer.cpp)
-target_link_libraries(lwr_manual_photographer ${OpenCV_LIBS} ${catkin_LIBRARIES}  ${PCL_LIBRARIES})
+target_link_libraries(lwr_manual_photographer ${OpenCV_LIBS} ${catkin_LIBRARIES}  ${PCL_LIBRARIES} lar_tools lar_vision)
+
+
+# COMAU CLUSTERIZER
+
+
+add_executable(comau_clusterizer  src/comau_clusterizer.cpp)
+target_link_libraries(comau_clusterizer ${OpenCV_LIBS} ${catkin_LIBRARIES}  ${PCL_LIBRARIES} lar_tools lar_vision)
+add_dependencies(comau_clusterizer ${PROJECT_NAME}_gencfg)

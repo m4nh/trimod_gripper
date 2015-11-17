@@ -1,34 +1,49 @@
-#include <ros/ros.h>
-// PCL specific includes
-
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <lwr_controllers/PoseRPY.h>
+
+
+//ROS
+
+#include <ros/ros.h>
 #include <sensor_msgs/JointState.h>
 #include <trajectory_msgs/JointTrajectory.h>
 #include <trajectory_msgs/JointTrajectoryPoint.h>
+#include <kdl/frames_io.hpp>
 
+//OPENCV
+#include <opencv2/opencv.hpp>
+#include <cv_bridge/cv_bridge.h>
+#include <image_transport/image_transport.h>
+
+
+//ROS
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/visualization/pcl_visualizer.h>
 #include <pcl_ros/transforms.h>
 #include <pcl_ros/impl/transforms.hpp>
+#include <pcl/filters/voxel_grid.h>
+
+//CUSTOM NODES
+#include <lwr_controllers/PoseRPY.h>
 #include "lar_tools.h"
-#include <opencv2/opencv.hpp>
-#include <kdl/frames_io.hpp>
+#include "lar_vision/commons/lar_vision_commons.h"
 
-#include <cv_bridge/cv_bridge.h>
-
-#include <image_transport/image_transport.h>
 
 using namespace std;
 
+//ROS
+ros::NodeHandle* nh;
+
+
+//CLOUDS & VIEWER
 pcl::visualization::PCLVisualizer* viewer;
 typedef pcl::PointXYZRGBA PointType;
 pcl::PointCloud<PointType>::Ptr cloud_full(new pcl::PointCloud<PointType>);
 pcl::PointCloud<PointType>::Ptr cloud_trans(new pcl::PointCloud<PointType>);
+pcl::PointCloud<PointType>::Ptr cloud_trans_filtered(new pcl::PointCloud<PointType>);
 pcl::PointCloud<PointType>::Ptr cloud_full_filtered(new pcl::PointCloud<PointType>);
 pcl::PointCloud<PointType>::Ptr cloud(new pcl::PointCloud<PointType>);
 std::string save_folder;
@@ -55,12 +70,30 @@ cloud_cb(const sensor_msgs::PointCloud2ConstPtr& input) {
     pcl::PCLPointCloud2 pcl_pc;
     pcl_conversions::toPCL(*input, pcl_pc);
     pcl::fromPCLPointCloud2(pcl_pc, *cloud);
-    
+
     pcl::transformPointCloud(*cloud, *cloud_trans, T_0_CAMERA);
 
+    // Create the filtering object
+    double leaf =0.01;
+    nh->param<double>("filter_leaf", leaf, 0.01);
+
+    pcl::VoxelGrid<PointType> sor;
+    sor.setInputCloud (cloud_trans);
+    sor.setLeafSize (leaf,leaf,leaf);
+    sor.filter (*cloud_trans_filtered);
+
+    (*cloud_full) += (*cloud_trans_filtered);
+    sor.setInputCloud (cloud_full);
+    sor.setLeafSize (leaf,leaf,leaf);
+    sor.filter (*cloud_full_filtered);
+
+
     viewer->removeAllPointClouds();
-    viewer->addPointCloud(cloud, "scene");
+
+    lar_vision::display_cloud(*viewer, cloud_full_filtered, 0, 255, 0, 3.0f, "view");
+    //viewer->addPointCloud(cloud, "scene");
 }
+
 cv::Mat current_rgb;
 cv::Mat current_depth;
 bool saving = false;
@@ -163,8 +196,8 @@ main(int argc, char** argv) {
     // Initialize ROS
     ros::init(argc, argv, "lwr_manual_photographer");
     ROS_INFO("lwr_manual_photographer node started...");
-    //    nh = new ros::NodeHandle();
-    ros::NodeHandle nh;
+    nh = new ros::NodeHandle();
+
     /** VIEWER */
     viewer = new pcl::visualization::PCLVisualizer("viewer");
     viewer->registerKeyboardCallback(keyboardEventOccurred, (void*) &viewer);
@@ -191,17 +224,17 @@ main(int argc, char** argv) {
 
     //        boost::filesystem::create_directory(save_folder);
 
-    sub_cloud = nh.subscribe("/xtion/xtion/depth/points", 1, cloud_cb);
-    sub_pose = nh.subscribe("/lwr/full_control_simple/current_pose", 1, pose_cb);
+    sub_cloud = nh->subscribe("/xtion/xtion/depth/points", 1, cloud_cb);
+    sub_pose = nh->subscribe("/lwr/full_control_simple/current_pose", 1, pose_cb);
 
-    image_transport::ImageTransport it(nh);
+    image_transport::ImageTransport it(*nh);
     sub_rgb = it.subscribe("/xtion/xtion/rgb/image_raw", 1, rgb_cb);
     sub_depth = it.subscribe("/xtion/xtion/depth/image_raw", 1, depth_cb);
 
     // Spin
 
     // Spin
-    while (nh.ok() && !viewer->wasStopped()) {
+    while (nh->ok() && !viewer->wasStopped()) {
 
         viewer->spinOnce();
         ros::spinOnce();

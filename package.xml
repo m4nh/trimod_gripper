@@ -67,6 +67,12 @@
   <run_depend>lar_tools</run_depend>
   <run_depend>lwr_controllers</run_depend>
 
+  <build_depend>lar_vision</build_depend>
+  <run_depend>lar_vision</run_depend>
+
+
+  <build_depend>dynamic_reconfigure</build_depend>
+  <run_depend>dynamic_reconfigure</run_depend>
 <!-- The export tag contains other, unspecified, tags -->
   <export>
 <!-- Other tools can request additional information be placed here -->

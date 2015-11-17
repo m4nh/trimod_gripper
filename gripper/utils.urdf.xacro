@@ -33,4 +33,12 @@
     </collision>
   </xacro:macro>
 
+
+  <material name="pino">
+     <color rgba="${158/255} ${22/255} ${22/255} 1.0"/>
+  </material>
+
+  <material name="gred">
+     <color rgba="${0/255} ${175/255} ${175/255} 1.0"/>
+  </material>
 </robot>
