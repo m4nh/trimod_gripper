@@ -34,6 +34,7 @@
 #include "lar_vision/segmentation/HighMap.h"
 #include <dynamic_reconfigure/server.h>
 #include <trimod_gripper/VisionConfig.h>
+#include "lar_tool_utils/UDPNode.h"
 
 using namespace std;
 using namespace lar_vision;
@@ -65,6 +66,8 @@ bool grasp = false;
 bool grasp_alpha;
 bool grasp_delta;
 
+//UDP
+lar_tools::UDPNode* node;
 
 ros::Subscriber sub_cloud;
 ros::Subscriber sub_pose;
@@ -79,7 +82,8 @@ std::vector<lwr_controllers::PoseRPY> poses;
 Eigen::Matrix4f T_0_ROBOT;
 Eigen::Matrix4f T_EE;
 Eigen::Matrix4f T_0_CAMERA;
-
+float* data_received;
+bool robot_is_moving;
 
 void updateSegmentation(){
         //Normals
@@ -109,7 +113,7 @@ void updateSegmentation(){
         //CLUSTERIZATION
         Palette palette;
         std::vector<pcl::PointIndices> cluster_indices;
-        clusterize(clusters, cluster_indices);
+        clusterize(clusters, cluster_indices,0.05f,100);
         Eigen::Vector3f gravity;
         gravity << 0, 0, 1;
         for (int i = 0; i < cluster_indices.size(); i++) {
@@ -118,7 +122,7 @@ void updateSegmentation(){
 
                 std::string name = "cluster_" + boost::lexical_cast<std::string>(i);
                 Eigen::Vector3i color = palette.getColor();
-                display_cloud(*viewer, cluster, color[0], color[1], color[2], 1, name);
+                display_cloud(*viewer, cluster, color[0], color[1], color[2], 5, name);
 
                 name = "cluster_rf_" + boost::lexical_cast<std::string>(i);
                 Eigen::Vector4f centroid;
@@ -142,9 +146,16 @@ void updateSegmentation(){
 void
 cloud_cb(const sensor_msgs::PointCloud2ConstPtr& input) {
 
+
+        if(robot_is_moving) return;
         pcl::PCLPointCloud2 pcl_pc;
         pcl_conversions::toPCL(*input, pcl_pc);
         pcl::fromPCLPointCloud2(pcl_pc, *cloud);
+
+        //CUT Z
+
+
+
 
         pcl::transformPointCloud(*cloud, *cloud_trans, T_0_CAMERA);
 
@@ -166,12 +177,13 @@ cloud_cb(const sensor_msgs::PointCloud2ConstPtr& input) {
         pcl::PassThrough<PointType> pass;
         pass.setInputCloud (cloud_full_filtered);
         pass.setFilterFieldName ("z");
-      
-        std::cout << "Filtering: "<<min_z<<" / "<<max_z<<std::endl;
+
         pass.setFilterLimits (min_z, max_z);
         //pass.setFilterLimitsNegative (true);
-        pass.filter (*cloud_full_filtered);
+          pass.filter (*cloud_full_filtered);
 
+
+        //std::cout << "New size: "<<  cloud_full_filtered->points.size()<<std::endl;
         viewer->removeAllPointClouds();
         viewer->removeAllShapes();
 
@@ -232,7 +244,10 @@ void keyboardEventOccurred(const pcl::visualization::KeyboardEvent &event,
                            void* viewer_void) {
         //    boost::shared_ptr<pcl::visualization::PCLVisualizer> viewer = *static_cast<boost::shared_ptr<pcl::visualization::PCLVisualizer> *> (viewer_void);
         if (event.getKeySym() == "v" && event.keyDown()) {
-                if (cloud->points.size() > 1000) {
+                std::cout << "Now: "<<cloud_full_filtered->points.size()<<std::endl;
+                cloud_full_filtered->points.clear();
+                std::cout << "Clear: "<<cloud_full_filtered->points.size()<<std::endl;
+                if (1==2 /*cloud->points.size() > 1000*/) {
                         //(*cloud_full) += (*cloud_trans);
                         //            //
                         saving = true;
@@ -275,6 +290,35 @@ void keyboardEventOccurred(const pcl::visualization::KeyboardEvent &event,
         }
 }
 
+void receiveCameraPose(){
+
+        while(node->isReady()) {
+                /* RECEIVE MESSAGE*/
+                ROS_INFO("Waiting message.");
+                node->receive(data_received,16*32);
+
+                int i =15;
+                Eigen::Matrix4f temp;
+                temp <<
+                data_received[i--],data_received[i--],data_received[i--],data_received[i--],
+                data_received[i--],data_received[i--],data_received[i--],data_received[i--],
+                data_received[i--],data_received[i--],data_received[i--],data_received[i--],
+                data_received[i--],data_received[i--],data_received[i--],data_received[i--];
+
+
+                T_0_CAMERA = temp.transpose();
+
+
+                robot_is_moving =   T_0_CAMERA(3,0) >= 0.5f ? false  : true;
+                T_0_CAMERA(3,0) = 0;
+                T_0_CAMERA(0,3) = T_0_CAMERA(0,3)/1000.0f;
+                T_0_CAMERA(1,3) = T_0_CAMERA(1,3)/1000.0f;
+                T_0_CAMERA(2,3) = T_0_CAMERA(2,3)/1000.0f;
+
+                std::cout << "Received: \n"<<T_0_CAMERA<<"\n"<<std::endl;
+        }
+}
+
 /** MAIN NODE **/
 int
 main(int argc, char** argv) {
@@ -284,12 +328,12 @@ main(int argc, char** argv) {
         ROS_INFO("comau_clusterizer node started...");
         nh = new ros::NodeHandle();
 
-        nh->param<double>("slice_size", slice_size, 0.01);
+        nh->param<double>("slice_size", slice_size, 0.03);
         nh->param<double>("offset", offset, 0.0);
         nh->param<double>("reduction", reduction, 1.01);
         nh->param<double>("filter_leaf", filter_leaf, 0.0051);
-        nh->param<double>("minz", min_z, 0.4f);
-        nh->param<double>("maxz", max_z, 3.0f);
+        nh->param<double>("minz", min_z, 0.0f);
+        nh->param<double>("maxz", max_z, 1.5f);
         nh->param<bool>("doslice", doslice, false);
         nh->param<bool>("dograsp", grasp, false);
         nh->param<bool>("grasp_alpha", grasp_alpha, 0.1f);
@@ -305,38 +349,37 @@ main(int argc, char** argv) {
         lar_tools::create_eigen_4x4(0, 0, 2.0f, 0, M_PI, 0, T_0_ROBOT);
         lar_tools::create_eigen_4x4(0, 0, 0, 0, 0, -M_PI / 2, T_EE);
 
-        //        std::stringstream ss;
-        //        ss << "/home/daniele/temp/" << ros::Time::now();
-        //        save_folder = ss.str();
-        //
-        //        T <<
-        //        1, 0, 0, 0,
-        //        0, 1, 0, 0,
-        //        0, 0, 1, 0,
-        //        0, 0, 0, 1;
+        /* UDP NODE*/
+        ROS_INFO("UDP Node creating...");
+        node = new lar_tools::UDPNode(50000);
+        data_received = new float[16];
+        robot_is_moving = true;
+        ROS_INFO("UDP Node created!");
+        T_0_CAMERA << 1,0,0,0, 0,1,0,0, 0,0,1,0, 0,0,0,1;
 
-
-        //        transformMatrixT(0, 0, 2.0f, 0, M_PI, 0, Robot_Base);
-        //        rotationMatrixT(0, 0, -M_PI / 2, EE);
-        //        transformMatrixT(0, 0, 1.0f, 0, 0, 0, Target);
 
 
         //        boost::filesystem::create_directory(save_folder);
 
-        sub_cloud = nh->subscribe("/xtion/xtion/depth/points", 1, cloud_cb);
+        //sub_cloud = nh->subscribe("/xtion/xtion/depth/points", 1, cloud_cb);
+        sub_cloud = nh->subscribe("/camera/depth_registered/points", 1, cloud_cb);
         sub_pose = nh->subscribe("/lwr/full_control_simple/current_pose", 1, pose_cb);
 
         image_transport::ImageTransport it(*nh);
-        sub_rgb = it.subscribe("/xtion/xtion/rgb/image_raw", 1, rgb_cb);
-        sub_depth = it.subscribe("/xtion/xtion/depth/image_raw", 1, depth_cb);
+        //sub_rgb = it.subscribe("/xtion/xtion/rgb/image_raw", 1, rgb_cb);
+        //sub_depth = it.subscribe("/xtion/xtion/depth/image_raw", 1, depth_cb);
+
+        /* PUBLISHING THREAD */
+        boost::thread updateTFsThread(receiveCameraPose);
 
         // Spin
+        while (nh->ok() && !viewer->wasStopped() && node->isReady()) {
 
-        // Spin
-        while (nh->ok() && !viewer->wasStopped()) {
 
                 viewer->spinOnce();
                 ros::spinOnce();
         }
 
+        ROS_INFO("Waiting for thread ends...");
+        //updateTFsThread.join();
 }
