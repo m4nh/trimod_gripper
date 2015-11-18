@@ -51,12 +51,13 @@ MESSAGE("#### LAR VISION #####")
 find_package(lar_vision)
 include_directories(${lar_vision_INCLUDE_DIRS})
 
- 
+
 #VisionSystemLegacy
 #set(VISION_SYSTEM_LIBS /usr/local/lib/libVisionSystemLegacy.so)
 
 generate_dynamic_reconfigure_options(
   cfg/comau_clusterizer.cfg
+  cfg/lwr_manual_photographer.cfg
 )
 
 
@@ -114,7 +115,7 @@ target_link_libraries(lwr_udp_to_controllers ${catkin_LIBRARIES} lar_tools)
 # MANUAL PHOTOGRAPHER
 add_executable(lwr_manual_photographer  src/lwr_manual_photographer.cpp)
 target_link_libraries(lwr_manual_photographer ${OpenCV_LIBS} ${catkin_LIBRARIES}  ${PCL_LIBRARIES} lar_tools lar_vision)
-
+add_dependencies(lwr_manual_photographer ${PROJECT_NAME}_gencfg)
 
 # COMAU CLUSTERIZER
 
