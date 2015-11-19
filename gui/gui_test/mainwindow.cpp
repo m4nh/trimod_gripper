@@ -40,34 +40,41 @@ qDebug()<<"Updating joint "<<index << " -> "<<this->joint_message.payload[index]
 void MainWindow::on_j0_slider_valueChanged(int value)
 {
     updateJoint(0,value);
+    ui->j0_lcd->display(value);
 }
 
 void MainWindow::on_j1_slider_valueChanged(int value)
 {
     updateJoint(1,value);
+    ui->j1_lcd->display(value);
 }
 
 void MainWindow::on_j2_slider_valueChanged(int value)
 {
     updateJoint(2,value);
+    ui->j2_lcd->display(value);
 }
 
 void MainWindow::on_j3_slider_valueChanged(int value)
 {
     updateJoint(3,value);
+    ui->j3_lcd->display(value);
 }
 
 void MainWindow::on_j4_slider_valueChanged(int value)
 {
     updateJoint(4,value);
+    ui->j4_lcd->display(value);
 }
 
 void MainWindow::on_j5_slider_valueChanged(int value)
 {
     updateJoint(5,value);
+    ui->j5_lcd->display(value);
 }
 
 void MainWindow::on_j6_slider_valueChanged(int value)
 {
     updateJoint(6,value);
+    ui->j6_lcd->display(value);
 }

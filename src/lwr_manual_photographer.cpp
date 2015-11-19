@@ -35,6 +35,10 @@
 #include <dynamic_reconfigure/server.h>
 #include <trimod_gripper/LwrManualPhotographerConfig.h>
 
+//boost
+#include <boost/date_time/posix_time/posix_time.hpp>
+#include <boost/thread/thread.hpp>
+
 using namespace std;
 using namespace lar_vision;
 
@@ -71,7 +75,7 @@ Eigen::Matrix4f T_ROBOT_CAMERA;
 Eigen::Matrix4f T_0_CAMERA;
 Eigen::Matrix4f T_0_ROBOT;
 
-
+int data_to_consume = 0;
 
 
 void callback(trimod_gripper::LwrManualPhotographerConfig& config, uint32_t level) {
@@ -181,17 +185,20 @@ void keyboardEventOccurred(const pcl::visualization::KeyboardEvent &event,
                 if (cloud->points.size() > 1000) {
                         //(*cloud_full) += (*cloud_trans);
                         //            //
-                        saving = true;
-                        while (!rgb_ready) ;
-                        while (!depth_ready) ;
-                        std::string save_folder = "/home/daniele/temp/dump_shots";
+                        data_to_consume = 20;
+                        //        }
+                }
+        }
+}
 
-                        for (int i = 0; i < 1; i++) {
+void consumeData(){
+        std::string save_folder = "/home/daniele/temp/temp_clouds";
+        while(nh->ok()) {
+
+                if(data_to_consume>0) {
+                        if(cloud->points.size()>0 && cloud_noise->points.size()>0) {
                                 std::ofstream myfile;
                                 std::stringstream ss;
-
-
-
 
                                 ss.str("");
                                 ss << save_folder << "/" << save_counter << "_robot.txt";
@@ -235,12 +242,15 @@ void keyboardEventOccurred(const pcl::visualization::KeyboardEvent &event,
 
                                 //            //
                                 //            //                        std::cout << "Saved snapshot: " << save_counter << std::endl;
+                                std::cout << "Saving shot: "<<save_counter<<std::endl;
                                 save_counter++;
+
+                                data_to_consume--;
                         }
-                        saving = false;
-                        //        }
                 }
+                boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
         }
+
 }
 
 /** MAIN NODE **/
@@ -291,6 +301,7 @@ main(int argc, char** argv) {
         sub_depth = it.subscribe("/xtion/xtion/depth/image_raw", 1, depth_cb);
 
         // Spin
+        boost::thread collectorThread(consumeData);
 
         // Spin
         while (nh->ok() && !viewer->wasStopped()) {
@@ -298,5 +309,7 @@ main(int argc, char** argv) {
                 viewer->spinOnce();
                 ros::spinOnce();
         }
+
+        collectorThread.join();
 
 }

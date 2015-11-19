@@ -34,6 +34,12 @@
           <property name="maximum">
            <number>180</number>
           </property>
+          <property name="singleStep">
+           <number>5</number>
+          </property>
+          <property name="pageStep">
+           <number>5</number>
+          </property>
           <property name="orientation">
            <enum>Qt::Horizontal</enum>
           </property>
