@@ -65,9 +65,11 @@ sensor_msgs::JointState joint_msg;
 std::vector<lwr_controllers::PoseRPY> poses;
 
 /** TRANSFORMS */
-Eigen::Matrix4f T_0_ROBOT;
-Eigen::Matrix4f T_EE;
+Eigen::Matrix4f T_0_BASE;
+Eigen::Matrix4f T_BASE_ROBOT;
+Eigen::Matrix4f T_ROBOT_CAMERA;
 Eigen::Matrix4f T_0_CAMERA;
+Eigen::Matrix4f T_0_ROBOT;
 
 
 
@@ -163,11 +165,12 @@ pose_cb(const lwr_controllers::PoseRPY& pose) {
                 pose.orientation.roll,
                 pose.orientation.pitch,
                 pose.orientation.yaw,
-                T_0_CAMERA
+                T_BASE_ROBOT
                 );
 
-        T_0_CAMERA = T_0_ROBOT * T_0_CAMERA;
-        T_0_CAMERA = T_0_CAMERA * T_EE;
+        T_0_ROBOT = T_0_BASE * T_BASE_ROBOT;
+        T_0_CAMERA = T_0_ROBOT * T_ROBOT_CAMERA;
+
 }
 int save_counter = 0;
 
@@ -181,16 +184,34 @@ void keyboardEventOccurred(const pcl::visualization::KeyboardEvent &event,
                         saving = true;
                         while (!rgb_ready) ;
                         while (!depth_ready) ;
-                        std::string save_folder = "/home/daniele/temp/0.000000000";
+                        std::string save_folder = "/home/daniele/temp/dump_shots";
 
-                        for (int i = 0; i < 5; i++) {
+                        for (int i = 0; i < 1; i++) {
                                 std::ofstream myfile;
                                 std::stringstream ss;
-                                ss << save_folder << "/" << save_counter << ".txt";
 
+
+
+
+                                ss.str("");
+                                ss << save_folder << "/" << save_counter << "_robot.txt";
+                                myfile.open(ss.str().c_str());
+                                myfile << T_0_ROBOT;
+                                myfile.close();
+
+                                ss.str("");
+                                ss << save_folder << "/" << save_counter << "_ee.txt";
+                                myfile.open(ss.str().c_str());
+                                myfile << T_ROBOT_CAMERA;
+                                myfile.close();
+
+                                ss.str("");
+                                ss << save_folder << "/" << save_counter << ".txt";
                                 myfile.open(ss.str().c_str());
                                 myfile << T_0_CAMERA;
                                 myfile.close();
+
+
                                 //            //
                                 //            //
                                 ss.str("");
@@ -207,6 +228,10 @@ void keyboardEventOccurred(const pcl::visualization::KeyboardEvent &event,
                                 ss.str("");
                                 ss << save_folder << "/" << save_counter << ".pcd";
                                 pcl::io::savePCDFileBinary(ss.str().c_str(), *cloud);
+
+                                ss.str("");
+                                ss << save_folder << "/" << save_counter << "_noise.pcd";
+                                pcl::io::savePCDFileBinary(ss.str().c_str(), *cloud_noise);
 
                                 //            //
                                 //            //                        std::cout << "Saved snapshot: " << save_counter << std::endl;
@@ -237,8 +262,8 @@ main(int argc, char** argv) {
         viewer->registerKeyboardCallback(keyboardEventOccurred, (void*) &viewer);
 
         /** TRANSFORMS */
-        lar_tools::create_eigen_4x4(0, 0, 2.0f, 0, M_PI, 0, T_0_ROBOT);
-        lar_tools::create_eigen_4x4(0, 0, 0, 0, 0, -M_PI / 2, T_EE);
+        lar_tools::create_eigen_4x4(0, 0, 2.0f, 0, M_PI, 0, T_0_BASE);
+        lar_tools::create_eigen_4x4(0, 0, 0, 0, 0, -M_PI / 2, T_ROBOT_CAMERA);
 
         //        std::stringstream ss;
         //        ss << "/home/daniele/temp/" << ros::Time::now();
