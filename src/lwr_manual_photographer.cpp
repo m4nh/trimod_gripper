@@ -57,7 +57,7 @@ pcl::PointCloud<PointType>::Ptr cloud_full_filtered(new pcl::PointCloud<PointTyp
 pcl::PointCloud<PointType>::Ptr cloud(new pcl::PointCloud<PointType>);
 std::string save_folder;
 Noiser noiser;
-
+bool cloud_consuming = false;
 
 ros::Subscriber sub_cloud;
 ros::Subscriber sub_pose;
@@ -96,7 +96,7 @@ void callback(trimod_gripper::LwrManualPhotographerConfig& config, uint32_t leve
 
 void
 cloud_cb(const sensor_msgs::PointCloud2ConstPtr& input) {
-
+        if(cloud_consuming)return;
         pcl::PCLPointCloud2 pcl_pc;
         pcl_conversions::toPCL(*input, pcl_pc);
         pcl::fromPCLPointCloud2(pcl_pc, *cloud);
@@ -135,6 +135,7 @@ cv::Mat current_depth;
 bool saving = false;
 bool rgb_ready = false;
 bool depth_ready = false;
+
 
 void
 rgb_cb(const sensor_msgs::ImageConstPtr& msg) {
@@ -196,9 +197,18 @@ void consumeData(){
         while(nh->ok()) {
 
                 if(data_to_consume>0) {
+                        cloud_consuming = true;
                         if(cloud->points.size()>0 && cloud_noise->points.size()>0) {
                                 std::ofstream myfile;
                                 std::stringstream ss;
+
+                                ss.str("");
+                                ss << save_folder << "/" << save_counter << ".pcd";
+                                pcl::io::savePCDFileBinary(ss.str().c_str(), *cloud);
+
+                                ss.str("");
+                                ss << save_folder << "/" << save_counter << "_noise.pcd";
+                                pcl::io::savePCDFileBinary(ss.str().c_str(), *cloud_noise);
 
                                 ss.str("");
                                 ss << save_folder << "/" << save_counter << "_robot.txt";
@@ -232,13 +242,7 @@ void consumeData(){
                                 ucharMat =  cv::Scalar::all(65535) - ucharMat;
                                 cv::imwrite(ss.str(), ucharMat);
 
-                                ss.str("");
-                                ss << save_folder << "/" << save_counter << ".pcd";
-                                pcl::io::savePCDFileBinary(ss.str().c_str(), *cloud);
 
-                                ss.str("");
-                                ss << save_folder << "/" << save_counter << "_noise.pcd";
-                                pcl::io::savePCDFileBinary(ss.str().c_str(), *cloud_noise);
 
                                 //            //
                                 //            //                        std::cout << "Saved snapshot: " << save_counter << std::endl;
@@ -247,6 +251,7 @@ void consumeData(){
 
                                 data_to_consume--;
                         }
+                        cloud_consuming = false;
                 }
                 boost::this_thread::sleep(boost::posix_time::milliseconds(1000));
         }
